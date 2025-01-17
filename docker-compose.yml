@@ -1,0 +1,36 @@
+services:
+  zlmediakit:
+    image: zlmediakit/zlmediakit:master
+    container_name: zlmediakit
+    restart: always
+    ports:
+      - "1935:1935"
+      - "8080:8080"
+      - "80:80"
+      - "8443:443"
+      - "8554:554"
+      - "10000:10000"
+      - "10000:10000/udp"
+      - "8000:8000/udp"
+      - "9000:9000/udp"
+    environment:
+      - TZ=America/Sao_Paulo
+    volumes:
+      - ./config:/opt/media/conf
+      - ./www:/opt/media/bin/www
+
+  backend-webhooks:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: backend-webhooks
+    ports:
+      - "3000:3000"
+    restart: always
+    volumes:
+      - ./www:/opt/media/bin/www
+
+networks:
+  default:
+    name: zlmediakit_network
+
